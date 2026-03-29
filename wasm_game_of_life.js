@@ -48,13 +48,16 @@ export class Universe {
         return Universe.__wrap(ret);
     }
     /**
-     * Render the current universe state onto the given canvas element.
+     * Render the current universe state onto a canvas found by ID.
+     * Looks up the canvas via `document.getElementById(canvas_id)`.
      * Sizes the canvas automatically based on width, height, and cell_size.
-     * @param {HTMLCanvasElement} canvas
+     * @param {string} canvas_id
      * @param {number} cell_size
      */
-    render(canvas, cell_size) {
-        wasm.universe_render(this.__wbg_ptr, canvas, cell_size);
+    render(canvas_id, cell_size) {
+        const ptr0 = passStringToWasm0(canvas_id, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.universe_render(this.__wbg_ptr, ptr0, len0, cell_size);
     }
     /**
      * Set the height of the universe.
@@ -104,11 +107,19 @@ function __wbg_get_imports() {
             getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);
             getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);
         },
+        __wbg___wbindgen_is_undefined_87a3a837f331fef5: function(arg0) {
+            const ret = arg0 === undefined;
+            return ret;
+        },
         __wbg___wbindgen_throw_5549492daedad139: function(arg0, arg1) {
             throw new Error(getStringFromWasm0(arg0, arg1));
         },
         __wbg_beginPath_d19446eab1bb1877: function(arg0) {
             arg0.beginPath();
+        },
+        __wbg_document_cf512e4e2300751d: function(arg0) {
+            const ret = arg0.document;
+            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
         },
         __wbg_error_a6fa202b58aa1cd3: function(arg0, arg1) {
             let deferred0_0;
@@ -128,10 +139,34 @@ function __wbg_get_imports() {
             const ret = arg0.getContext(getStringFromWasm0(arg1, arg2));
             return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
         }, arguments); },
+        __wbg_getElementById_7c22ba050c51a610: function(arg0, arg1, arg2) {
+            const ret = arg0.getElementById(getStringFromWasm0(arg1, arg2));
+            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
+        },
         __wbg_instanceof_CanvasRenderingContext2d_05c92edaf1c9546d: function(arg0) {
             let result;
             try {
                 result = arg0 instanceof CanvasRenderingContext2D;
+            } catch (_) {
+                result = false;
+            }
+            const ret = result;
+            return ret;
+        },
+        __wbg_instanceof_HtmlCanvasElement_14482979108c6cf8: function(arg0) {
+            let result;
+            try {
+                result = arg0 instanceof HTMLCanvasElement;
+            } catch (_) {
+                result = false;
+            }
+            const ret = result;
+            return ret;
+        },
+        __wbg_instanceof_Window_2fa8d9c2d5b6104a: function(arg0) {
+            let result;
+            try {
+                result = arg0 instanceof Window;
             } catch (_) {
                 result = false;
             }
@@ -166,6 +201,22 @@ function __wbg_get_imports() {
             const len1 = WASM_VECTOR_LEN;
             getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);
             getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);
+        },
+        __wbg_static_accessor_GLOBAL_8dfb7f5e26ebe523: function() {
+            const ret = typeof global === 'undefined' ? null : global;
+            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
+        },
+        __wbg_static_accessor_GLOBAL_THIS_941154efc8395cdd: function() {
+            const ret = typeof globalThis === 'undefined' ? null : globalThis;
+            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
+        },
+        __wbg_static_accessor_SELF_58dac9af822f561f: function() {
+            const ret = typeof self === 'undefined' ? null : self;
+            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
+        },
+        __wbg_static_accessor_WINDOW_ee64f0b3d8354c0b: function() {
+            const ret = typeof window === 'undefined' ? null : window;
+            return isLikeNone(ret) ? 0 : addToExternrefTable0(ret);
         },
         __wbg_stroke_973b13cddda4b497: function(arg0) {
             arg0.stroke();
