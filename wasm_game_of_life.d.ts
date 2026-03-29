@@ -36,11 +36,19 @@ export class Universe {
     width(): number;
 }
 
+/**
+ * Start an animated Game of Life on the given canvas.
+ * Creates a new Universe and runs a requestAnimationFrame loop.
+ * Each frame advances the simulation by `ticks_per_frame` generations.
+ */
+export function start(canvas_id: string, cell_size: number, ticks_per_frame: number): void;
+
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
     readonly memory: WebAssembly.Memory;
     readonly __wbg_universe_free: (a: number, b: number) => void;
+    readonly start: (a: number, b: number, c: number, d: number) => void;
     readonly universe_cells: (a: number) => number;
     readonly universe_height: (a: number) => number;
     readonly universe_new: () => number;
@@ -50,12 +58,14 @@ export interface InitOutput {
     readonly universe_tick: (a: number) => void;
     readonly universe_toggle_cell: (a: number, b: number, c: number) => void;
     readonly universe_width: (a: number) => number;
+    readonly wasm_bindgen__convert__closures_____invoke__hd857630fb801b9e0: (a: number, b: number) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __externref_table_alloc: () => number;
     readonly __wbindgen_externrefs: WebAssembly.Table;
     readonly __wbindgen_free: (a: number, b: number, c: number) => void;
     readonly __wbindgen_exn_store: (a: number) => void;
+    readonly __wbindgen_destroy_closure: (a: number, b: number) => void;
     readonly __wbindgen_start: () => void;
 }
 

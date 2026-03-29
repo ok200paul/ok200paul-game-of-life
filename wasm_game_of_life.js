@@ -97,6 +97,20 @@ export class Universe {
 }
 if (Symbol.dispose) Universe.prototype[Symbol.dispose] = Universe.prototype.free;
 
+/**
+ * Start an animated Game of Life on the given canvas.
+ * Creates a new Universe and runs a requestAnimationFrame loop.
+ * Each frame advances the simulation by `ticks_per_frame` generations.
+ * @param {string} canvas_id
+ * @param {number} cell_size
+ * @param {number} ticks_per_frame
+ */
+export function start(canvas_id, cell_size, ticks_per_frame) {
+    const ptr0 = passStringToWasm0(canvas_id, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    wasm.start(ptr0, len0, cell_size, ticks_per_frame);
+}
+
 function __wbg_get_imports() {
     const import0 = {
         __proto__: null,
@@ -113,6 +127,9 @@ function __wbg_get_imports() {
         },
         __wbg___wbindgen_throw_5549492daedad139: function(arg0, arg1) {
             throw new Error(getStringFromWasm0(arg0, arg1));
+        },
+        __wbg__wbg_cb_unref_fbe69bb076c16bad: function(arg0) {
+            arg0._wbg_cb_unref();
         },
         __wbg_beginPath_d19446eab1bb1877: function(arg0) {
             arg0.beginPath();
@@ -183,6 +200,10 @@ function __wbg_get_imports() {
             const ret = new Error();
             return ret;
         },
+        __wbg_requestAnimationFrame_3b4101343dfc745b: function() { return handleError(function (arg0, arg1) {
+            const ret = arg0.requestAnimationFrame(arg1);
+            return ret;
+        }, arguments); },
         __wbg_set_fillStyle_5831c43ae72fcbaa: function(arg0, arg1, arg2) {
             arg0.fillStyle = getStringFromWasm0(arg1, arg2);
         },
@@ -221,6 +242,11 @@ function __wbg_get_imports() {
         __wbg_stroke_973b13cddda4b497: function(arg0) {
             arg0.stroke();
         },
+        __wbindgen_cast_0000000000000001: function(arg0, arg1) {
+            // Cast intrinsic for `Closure(Closure { owned: true, function: Function { arguments: [], shim_idx: 9, ret: Unit, inner_ret: Some(Unit) }, mutable: true }) -> Externref`.
+            const ret = makeMutClosure(arg0, arg1, wasm_bindgen__convert__closures_____invoke__hd857630fb801b9e0);
+            return ret;
+        },
         __wbindgen_init_externref_table: function() {
             const table = wasm.__wbindgen_externrefs;
             const offset = table.grow(4);
@@ -237,6 +263,10 @@ function __wbg_get_imports() {
     };
 }
 
+function wasm_bindgen__convert__closures_____invoke__hd857630fb801b9e0(arg0, arg1) {
+    wasm.wasm_bindgen__convert__closures_____invoke__hd857630fb801b9e0(arg0, arg1);
+}
+
 const UniverseFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_universe_free(ptr >>> 0, 1));
@@ -246,6 +276,10 @@ function addToExternrefTable0(obj) {
     wasm.__wbindgen_externrefs.set(idx, obj);
     return idx;
 }
+
+const CLOSURE_DTORS = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(state => wasm.__wbindgen_destroy_closure(state.a, state.b));
 
 function debugString(val) {
     // primitive types
@@ -344,6 +378,34 @@ function handleError(f, args) {
 
 function isLikeNone(x) {
     return x === undefined || x === null;
+}
+
+function makeMutClosure(arg0, arg1, f) {
+    const state = { a: arg0, b: arg1, cnt: 1 };
+    const real = (...args) => {
+
+        // First up with a closure we increment the internal reference
+        // count. This ensures that the Rust closure environment won't
+        // be deallocated while we're invoking it.
+        state.cnt++;
+        const a = state.a;
+        state.a = 0;
+        try {
+            return f(a, state.b, ...args);
+        } finally {
+            state.a = a;
+            real._wbg_cb_unref();
+        }
+    };
+    real._wbg_cb_unref = () => {
+        if (--state.cnt === 0) {
+            wasm.__wbindgen_destroy_closure(state.a, state.b);
+            state.a = 0;
+            CLOSURE_DTORS.unregister(state);
+        }
+    };
+    CLOSURE_DTORS.register(real, state, state);
+    return real;
 }
 
 function passStringToWasm0(arg, malloc, realloc) {
