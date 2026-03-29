@@ -1,0 +1,21 @@
+package wasm-game-of-life:game-of-life;
+
+world game-of-life {
+  export game: interface {
+    enum cell {
+      dead,
+      alive,
+    }
+
+    resource universe {
+      constructor();
+      cells: func() -> s32;
+      height: func() -> s32;
+      width: func() -> s32;
+      set-height: func(height: s32);
+      set-width: func(width: s32);
+      tick: func();
+      toggle-cell: func(row: s32, column: s32);
+    }
+  }
+}
