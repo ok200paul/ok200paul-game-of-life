@@ -1,21 +1,52 @@
 package wasm-game-of-life:game-of-life;
 
+/// Raw wasm module exports matching wasm_game_of_life_bg.wasm.
+/// All functions operate on opaque handles (pointers into linear memory).
 world game-of-life {
-  export game: interface {
-    enum cell {
-      dead,
-      alive,
-    }
 
-    resource universe {
-      constructor();
-      cells: func() -> s32;
-      height: func() -> s32;
-      width: func() -> s32;
-      set-height: func(height: s32);
-      set-width: func(width: s32);
-      tick: func();
-      toggle-cell: func(row: s32, column: s32);
-    }
-  }
+  /// Linear memory shared by all exports.
+  /// Must be accessed to read cell data from pointers.
+  export memory: memory;
+
+  /// Module start function. Must be called once before any other export.
+  export wbindgen-start: func();
+
+  /// Allocate `size` bytes with alignment `align` from the wasm allocator.
+  export wbindgen-malloc: func(size: s32, align: s32) -> s32;
+
+  /// Reallocate a previous allocation at `ptr` of `old-size` bytes
+  /// to `new-size` bytes with alignment `align`.
+  export wbindgen-realloc: func(ptr: s32, old-size: s32, align: s32, new-size: s32) -> s32;
+
+  /// Free an allocation at `ptr` of `size` bytes with alignment `align`.
+  export wbindgen-free: func(ptr: s32, size: s32, align: s32);
+
+  /// Table of externref values used by wasm-bindgen glue.
+  export wbindgen-externrefs: table;
+
+  /// Allocate and return a new Universe handle.
+  export universe-new: func() -> s32;
+
+  /// Free a Universe handle.
+  export universe-free: func(self: s32, b: s32);
+
+  /// Advance the simulation by one tick.
+  export universe-tick: func(self: s32);
+
+  /// Return a pointer into linear memory where cell data begins.
+  /// Read width * height bytes from memory at this offset.
+  /// Each byte is 0 (dead) or 1 (alive).
+  export universe-cells: func(self: s32) -> s32;
+
+  export universe-width: func(self: s32) -> s32;
+  export universe-height: func(self: s32) -> s32;
+
+  /// Set width. Resets all cells to dead.
+  export universe-set-width: func(self: s32, width: s32);
+
+  /// Set height. Resets all cells to dead.
+  export universe-set-height: func(self: s32, height: s32);
+
+  /// Toggle the cell at (row, column).
+  export universe-toggle-cell: func(self: s32, row: s32, column: s32);
 }
